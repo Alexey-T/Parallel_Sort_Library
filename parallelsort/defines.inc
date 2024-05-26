@@ -1,0 +1,7 @@
+{$DEFINE CPU64}
+{$DEFINE Windows64}
+//{$DEFINE Unix}
+
+//{$DEFINE Lockfree_MPMC}
+{$DEFINE FIFOQUEUE_MPMC}
+

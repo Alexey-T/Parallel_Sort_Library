@@ -1,0 +1,10 @@
+{$DEFINE CPU64}
+{$DEFINE Windows64}
+
+{$DEFINE XE}
+
+{$DEFINE threads}
+
+//{$DEFINE Lockfree_MPMC}
+{$DEFINE FIFOQUEUE_MPMC}
+

@@ -1,0 +1,4 @@
+{$DEFINE CPU64}
+
+{$DEFINE FIFOQUEUE_MPMC}
+{$DEFINE threads}

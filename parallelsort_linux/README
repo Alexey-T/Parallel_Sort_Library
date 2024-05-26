@@ -1,0 +1,137 @@
+﻿*************************************************************
+*      Parallel Sort Library 
+*      Version: 3.72 
+*      Author: Amine Moulay Ramdane                
+*     Company: Cyber-NT Communications           
+*      
+*       Email: aminer@videotron.ca   
+*     Website: https://sites.google.com/site/scalable68/
+*        Date: April 9,2010                                            
+* Last update: October 6,2020                                 
+*
+* Copyright © 2009 Amine Moulay Ramdane.All rights reserved
+*
+*************************************************************
+
+Parallel Sort Library that supports Parallel Quicksort, Parallel HeapSort and Parallel MergeSort on Multicores systems.
+
+Parallel Sort Library uses my Thread Pool Engine and sort many array parts - of your array - in parallel using Quicksort or HeapSort or MergeSort and after that it finally merge them - with the merge() procedure -
+
+In the previous parallelsort version i have parallelized only the sort part, but in this new parallelsort version i have parallelized also the merge procedure part and it gives better performance.
+
+My new parallel sort algorithm has become more cache-aware, and i have done some benchmarks with my new parallel algorithm and it has given up to 5X scalability on a Quadcore when sorting strings, other than that i have cleaned more the code and i think my parallel Sort library has become a more professional and industrial parallel Sort library , you can be confident cause i have tested it thoroughly and no bugs have showed , so i hope you will be happy with my new Parallel Sort library. 
+
+I have also included a "test.pas" example, just compile first the "gendata.pas" inside the zip file and run it first, after that compile the "test.pas" example and run it and do your benchmarks. 
+
+I have implemented a Parallel hybrid divide-and-conquer merge algorithm that performs 0.9-5.8 times better than sequential merge, on a quad-core processor, with larger arrays outperforming by over 5 times. Parallel processing combined with a hybrid algorithm approach provides a powerful high performance result.
+
+My algorithm of finding the median in parallel merge is O(log(min(|A|,|B|))), where |A| is the size of A, since the binary search is performed within the smaller array and is O(lgN). 
+
+The idea:
+
+Let's assume we want to merge sorted arrays X and Y. Select X[m] median element in X. Elements in X[ .. m-1] are less than or equal to X[m]. Using binary search find index k of the first element in Y greater than X[m]. Thus Y[ .. k-1] are less than or equal to X[m] as well. Elements in X[m+1..] are greater than or equal to X[m] and Y[k .. ] are greater. So merge(X, Y) can be defined as concat(merge(X[ .. m-1], Y[ .. k-1]), X[m], merge(X[m+1.. ], Y[k .. ])) now we can recursively in parallel do merge(X[ .. m-1], Y[ .. k-1]) and merge(X[m+1 .. ], Y[k .. ]) and then concat results. 
+
+The best case time complexity of ParallelSort using mergesort is:
+
+((n/p)* log(n/p)) + O(n/p)
+
+p: is the number of cores
+
+the ((n/p)* log(n/p)) is the time complexity of the sorting part.
+
+O(n/p) is the best case time complexity of the merging part.
+
+so the best case time complexity is: ((n/p)* log(n/p))
+
+The worst case time complexity of parallel sort library using mergesort is:
+
+((n/p)* log(n/p)) + O(n/p)
+
+the ((n/p)* log(n/p)) is the time complexity of the sorting part.
+
+O(n/p) is the worst case time complexity of the merging part.
+
+so the worst case time complexity of parallelsort using mergesort is approximatly: ((n/p)* log(n/p))
+
+I have done some tests with my ParallelSort library and i have noticed that it can give up to 5X scalability with strings, and it gives 3x scalability with integers on a quad cores.
+
+So, why it scales to 5X with strings and only 3x with integers on a quad cores ?
+
+I explain:
+
+In the SequentialMerge() method and QSort() method inside Parallel Sort library, i am calling the Scompare() method and also in both of them i am copying to the memory system.
+
+So when i am using strings the SCompare() method is more expensive, so the parallel part p in the Amdahl equation 1/ S + P/N (S: the serial part, P: parallel part and N: the number of cores) is bigger than with integers so the Amdahl equation will scale better, but when we are using integers the SCompare() method is less expensive than the SCompare() with strings, so the parallel part p in the Amdahl equation is less bigger than with strings. so this is why parallel sorting with strings scales better than with integers.
+
+I have implemented mergsort and quicksort, but as you know the complexity of mergesort in the worst case is better than quicksort , and the mergesort that i have implemented is faster than quicksort, but mergesort takes more space..
+
+One way to parallelize the sorts is: 
+
+- Divide the data among the processors 
+- Sort the data on the individual processors. 
+- Parallel Merge the various data
+
+Note that the merge operation is a reduction operation !
+
+I have done some scalability tests on my parallelsort library and i have come to the conclusion that parallel heapsort is better on scalability than parallel quicksort cause the P part (of the Amdahl equation) is bigger in parallel heapsort
+
+than in parallel quicksort, the parallel heapsort is doing more on the parallel part, it's why it scales better than parallel quicksort, but parallel quicksort is still faster than parallel heapsort on my tests on a quad core processor.
+
+You have to set the number of cores in the constructor to power of 2 or 1.
+
+Language:  FPC Pascal v2.2.0+ / Delphi 7+          
+                                                                                             
+Required FPC switches: -O3 -Sd 
+
+Operating Systems:  Win , Linux and Mac (all x86).                        
+
+Here is how to configure it from the defines.inc files:
+
+{$DEFINE CPU32} and {$DEFINE Windows32} for 32 bit systems
+
+{$DEFINE CPU64} and {$DEFINE Windows64} for 64 bit systems
+
+
+Look at the test1.pas example to know how to use my ParallelSort library.
+
+
+***********************************************************
+                     IMPORTANT NOTE:
+ This software is provided 'as-is', without any express or
+ implied warranty. In no event will the author be held
+ liable for any damages arising from the use of this
+ software.
+ Permission is granted to anyone to use this software for
+ any purpose, including commercial applications, and to
+ alter it and redistribute it freely, subject to the
+ following restrictions:
+ 1. The origin of this software must not be misrepresented,
+    you must not claim that you wrote the original software.
+    If you use this software in a product, an acknowledgment
+    in the product documentation would be appreciated but is
+    not required.
+ 2. Altered source versions must be plainly marked as such,
+    and must not be misrepresented as being the original
+    software.
+ 3. This notice may not be removed or altered from any
+    source distribution.
+***********************************************************
+
+If you make some money with my softwares in commercial projects, be kind to make a donation to me in form of an amount of money. To make this donation, please contact me by email and i will give you my personal information to where you will send this donation.
+
+Disclaimer:
+
+This software is provided on an "as-is" basis, with no warranties, express or implied.  The entire risk and liability of using it is yours.
+Any damages resulting from the use or misuse of this software will be the responsibility of the user.
+
+
+
+
+Thank you.
+
+Amine Moulay Ramdane.
+
+
+
+
+
